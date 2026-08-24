@@ -18,10 +18,14 @@ segunda máquina.
 ## IBM Watson Assistant
 
 - credenciais importadas de arquivo externo sem impressão dos valores;
-- workspace v1 criado, treinado e atualizado de forma idempotente;
-- suíte HTTP principal aprovada no modo Watson real;
-- nove frases inéditas aprovadas, incluindo segurança e fallback;
-- chave, URL completa e workspace ID permanecem fora dos arquivos versionados.
+- workspace v1 preservado como referência e rollback da modelagem;
+- sete Actions v2 migradas para o `Fiapinho`, todas visíveis como `No errors`;
+- 46 frases de treinamento e três entidades no payload v2;
+- adapter atualizado para enviar Assistant ID, Environment ID e UUID pseudônimo
+  temporário exigido pelo runtime atual;
+- suíte HTTP principal e nove frases inéditas aprovadas no modo Watson v2 real,
+  incluindo segurança e fallback;
+- chave, URL completa e IDs permanecem fora dos arquivos versionados.
 
 ## Ir Além 1
 

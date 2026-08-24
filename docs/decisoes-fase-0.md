@@ -20,12 +20,12 @@ Data da validação: 24/08/2026.
 - Dados e exemplos são exclusivamente fictícios.
 - O modo `mock` existe somente para validar a fundação das Fases 0 e 1.
 
-## Pendências para as próximas fases
+## Decisões concluídas nas fases seguintes
 
-- confirmar no material didático o perfil Watson usado: stateful/Assistant ou stateless/workspace;
-- obter e configurar a instância acadêmica do Watson;
-- modelar intents, entities e dialog nodes;
-- substituir o serviço mock pela integração real antes da entrega.
+- o runtime final usa Assistant v2 stateful, mantendo workspace v1 como rollback;
+- a instância acadêmica foi configurada por Docker secret;
+- sete Actions, 46 exemplos e três entidades foram migrados para o `Fiapinho`;
+- o serviço mock foi substituído pela integração real v2 na validação final.
 
 ## Evidências da primeira execução
 
@@ -40,5 +40,5 @@ Em 24/08/2026, neste ambiente de referência:
 - a porta foi publicada somente em `127.0.0.1:5000`.
 
 Essas evidências encerram a fundação técnica desta máquina, mas não substituem os
-portões pendentes da Fase 0: Watson real, segunda máquina, equipe e revisão do
-conteúdo didático autorizado.
+portões pendentes da Fase 0: segunda máquina, equipe e revisão do conteúdo
+didático autorizado. O portão Watson real foi concluído com Actions v2.

@@ -11,18 +11,18 @@ não inserir dados pessoais ou informações reais de saúde.
 
 ## Fluxo no Watson Assistant
 
-A skill possui sete intents: `saudacao`, `ajuda`, `relatar_sintoma`,
+A skill de Actions possui sete fluxos: `saudacao`, `ajuda`, `relatar_sintoma`,
 `confirmar`, `negar`, `encerrar` e `sinal_urgencia`. As entities `sintoma`,
 `duracao` e `intensidade` reconhecem somente elementos expressos pelo usuário.
 Elas não convertem termos em conclusão médica.
 
-Os dialog nodes são avaliados por prioridade. O nó de segurança precede os
-fluxos comuns e responde com texto fixo orientando SAMU 192 ou serviço de
-emergência no Brasil. Saudação e ajuda apresentam as possibilidades; o relato
-solicita duração e intensidade; confirmação/correção usam a variável de contexto
-`em_confirmacao`; encerramento reforça os limites; e `anything_else` mantém a
-conversa recuperável. A configuração versionada está em
-`watson/assistant-export.json`.
+As Actions formam uma cadeia explícita de prioridade. A ação de segurança
+precede os fluxos comuns e responde com texto fixo orientando SAMU 192 ou serviço
+de emergência no Brasil. Saudação e ajuda apresentam as possibilidades; o
+relato solicita duração e intensidade; confirmação e correção são ações
+independentes; encerramento reforça os limites; e `anything_else` mantém a
+conversa recuperável. A configuração clássica e os scripts reprodutíveis de
+migração estão em `watson/`.
 
 ## Integração e interface
 
@@ -55,8 +55,10 @@ encerramento, segurança, adapters Watson v1/v2 e exportação JSON. Os perfis
 opcionais de IA generativa e RPA são independentes e não quebram o MVP.
 
 O modo `mock` foi usado na fundação e permanece disponível para desenvolvimento
-offline. Na validação final, a configuração versionada foi importada em um
-workspace Watson v1, treinada e acessada pelo backend Docker. Nove frases
-inéditas cobriram todos os intents e os fallbacks; depois de um ajuste de treino,
-todos os casos passaram. O protótipo não possui validação clínica, persistência
-de conversa, alta disponibilidade ou finalidade de produção.
+offline. Na validação final, a modelagem clássica foi migrada para sete Actions
+v2 visíveis no `Fiapinho`, com 46 exemplos e três entidades. O backend Docker
+usou Assistant ID e Environment ID separados e um UUID temporário pseudônimo.
+Nove frases inéditas cobriram todos os fluxos e fallbacks; depois de um ajuste de
+treino e propagação do modelo, todos os casos passaram. O protótipo não possui
+validação clínica, persistência de conversa, alta disponibilidade ou finalidade
+de produção.

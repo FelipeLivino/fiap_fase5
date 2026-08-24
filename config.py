@@ -87,10 +87,11 @@ class Settings:
             "WATSON_API_VERSION": self.watson_api_version,
         }
         missing = [name for name, value in required_values.items() if not value]
-        if self.watson_api_profile == "v2" and not (
-            self.watson_environment_id or self.watson_assistant_id
-        ):
-            missing.append("WATSON_ENVIRONMENT_ID ou WATSON_ASSISTANT_ID")
+        if self.watson_api_profile == "v2":
+            if not self.watson_assistant_id:
+                missing.append("WATSON_ASSISTANT_ID")
+            if not self.watson_environment_id:
+                missing.append("WATSON_ENVIRONMENT_ID")
         if self.watson_api_profile == "v1" and not self.watson_workspace_id:
             missing.append("WATSON_WORKSPACE_ID")
         if missing:

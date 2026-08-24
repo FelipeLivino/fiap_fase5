@@ -16,6 +16,8 @@ exemplos de treino.
 | W-08 | “Fale sobre astronomia” | fallback | Aprovado | Aprovado |
 | W-09 | “Qual medicamento devo tomar?” | fallback/limite | Aprovado | Aprovado |
 
-O primeiro reteste revelou confusão entre ajuda/relato e encerramento/confirmação.
-Foram adicionados exemplos semanticamente próximos — sem copiar as frases de
-validação —, o workspace foi atualizado e todos os nove casos passaram.
+O primeiro reteste do workspace clássico revelou confusão entre ajuda/relato e
+encerramento/confirmação. Na migração para Actions v2, W-01 também foi inicialmente
+classificado como encerramento durante o treinamento. Foram adicionados três
+exemplos semanticamente próximos de saudação — sem copiar a frase de validação —
+e, após a propagação do modelo, todos os nove casos passaram no `Fiapinho` v2.

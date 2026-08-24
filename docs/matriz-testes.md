@@ -12,7 +12,7 @@ Data local: 24/08/2026.
 | Estabilidade | build sem cache e três inicializações consecutivas com `--wait` | Aprovado |
 | Contêiner MVP | healthcheck, UID 10001, bind 127.0.0.1 | Aprovado |
 | Dependências | `pip check` nas imagens MVP, GenAI e RPA | Aprovado |
-| Watson real | importação, treinamento e 9 frases inéditas pelo backend Docker | 9 aprovados |
+| Watson real | 7 Actions v2, 46 exemplos, treinamento e 9 frases inéditas pelo backend Docker | 9 aprovados |
 | Gemini real | extração estruturada com `gemini-3.5-flash-lite` pelo `genai-live` | Aprovado |
 | Segunda máquina | build sem cache e execução | Pendente de integrante |
 

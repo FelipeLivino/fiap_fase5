@@ -1,0 +1,46 @@
+Olá,saudacao
+"Oi, tudo bem?",saudacao
+Bom dia,saudacao
+Quero iniciar o atendimento,saudacao
+Podemos conversar?,saudacao
+Boa noite,saudacao
+Quero começar uma conversa,saudacao
+Vamos iniciar,saudacao
+Como você pode me ajudar?,ajuda
+O que este assistente faz?,ajuda
+Quais perguntas posso fazer?,ajuda
+Preciso de ajuda,ajuda
+Explique como funciona,ajuda
+Quais cenários fictícios posso informar?,ajuda
+Em que tipo de relato você ajuda?,ajuda
+O que aceita como entrada?,ajuda
+No cenário fictício senti palpitações,relatar_sintoma
+Estou simulando uma tontura,relatar_sintoma
+Quero registrar falta de ar leve no exercício simulado,relatar_sintoma
+Senti desconforto no peito no exemplo,relatar_sintoma
+Minha frequência fictícia ficou acelerada,relatar_sintoma
+Quero relatar um sintoma simulado,relatar_sintoma
+Sim,confirmar
+Isso mesmo,confirmar
+Correto,confirmar
+Pode continuar,confirmar
+Confirmo,confirmar
+Não,negar
+Está incorreto,negar
+Quero corrigir,negar
+Não foi isso,negar
+Preciso alterar a informação,negar
+Encerrar,encerrar
+"Obrigado, era isso",encerrar
+Até logo,encerrar
+Finalizar conversa,encerrar
+Tchau,encerrar
+Pode encerrar por aqui,encerrar
+Quero terminar a conversa,encerrar
+Vou finalizar por agora,encerrar
+Estou com dor forte no peito,sinal_urgencia
+Desmaiei e estou com suor frio,sinal_urgencia
+Sinto falta de ar intensa,sinal_urgencia
+A dor no peito é muito forte e repentina,sinal_urgencia
+Estou simulando desmaio com dor forte no peito,sinal_urgencia
+Não consigo respirar direito neste cenário,sinal_urgencia

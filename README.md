@@ -12,8 +12,8 @@ Repositório público: <https://github.com/FelipeLivino/fiap_fase5>
 ## Estado
 
 - MVP Flask e interface: aprovados no modo mock e no Watson real;
-- adapter IBM Watson Assistant v1/v2: implementado; workspace v1 real importado,
-  treinado e aprovado em nove casos inéditos;
+- adapter IBM Watson Assistant v1/v2: implementado; sete Actions v2 reais no
+  `Fiapinho`, com 46 exemplos e nove casos inéditos aprovados;
 - Ir Além 1: Gemini 3.5 Flash-Lite, JSON Schema, guardrails, 12 testes offline e
   uma chamada real aprovados;
 - Ir Além 2: PostgreSQL, MongoDB e worker RPA com dois ciclos e 13 verificações
@@ -64,8 +64,8 @@ docker compose down
 ## IBM Watson Assistant
 
 O arquivo `.env` seleciona a API com `WATSON_API_PROFILE=v2` ou `v1`. Para v2,
-preencha URL, versão e environment/assistant ID; para v1, preencha URL, versão e
-workspace ID. Grave a chave apenas em `.secrets/watson_api_key` e altere
+preencha URL, versão, Assistant ID e Environment ID; para v1, preencha URL,
+versão e workspace ID. Grave a chave apenas em `.secrets/watson_api_key` e altere
 `ASSISTANT_MODE=watson`.
 
 Um arquivo de credenciais IBM no formato `ASSISTANT_URL`/
@@ -77,9 +77,10 @@ docker compose run --rm --entrypoint python cardioia-app watson/import_workspace
 docker compose --profile test run --rm --entrypoint python cardioia-test tests/watson_live_test.py
 ```
 
-A modelagem importável e o roteiro de validação estão em `watson/`. A integração
-real v1 foi aprovada em 24/08/2026; o modo mock continua disponível para execução
-offline sem credencial.
+A modelagem importável, os scripts de migração e o roteiro de validação estão em
+`watson/`. A integração real v2 com Actions foi aprovada em 24/08/2026; o
+workspace v1 continua versionado como referência e rollback. O modo mock
+permanece disponível para execução offline sem credencial.
 
 ## Ir Além 1 — Gemini
 

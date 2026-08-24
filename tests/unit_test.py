@@ -22,12 +22,16 @@ class FakeResponse:
 class FakeV2Client:
     def __init__(self, *, empty: bool = False):
         self.empty = empty
+        self.created: list[dict] = []
+        self.messages: list[dict] = []
         self.deleted: list[str] = []
 
-    def create_session(self, **_kwargs):
+    def create_session(self, **kwargs):
+        self.created.append(kwargs)
         return FakeResponse({"session_id": "provider-secret-id"})
 
-    def message(self, **_kwargs):
+    def message(self, **kwargs):
+        self.messages.append(kwargs)
         generic = [] if self.empty else [
             {"response_type": "text", "text": "Primeira resposta"},
             {"response_type": "text", "text": "Segunda resposta"},
@@ -69,6 +73,12 @@ def main() -> int:
     assert reply.messages == ("Primeira resposta", "Segunda resposta")
     assert reply.intent == "saudacao"
     assert conversation.provider_session_id == "provider-secret-id"
+    assert v2_client.created == [
+        {"assistant_id": "assistant-id", "environment_id": "environment-id"}
+    ]
+    assert v2_client.messages[0]["assistant_id"] == "assistant-id"
+    assert v2_client.messages[0]["environment_id"] == "environment-id"
+    assert v2_client.messages[0]["user_id"] == "public-id"
     service.close(conversation)
     assert v2_client.deleted == ["provider-secret-id"]
 

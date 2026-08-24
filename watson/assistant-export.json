@@ -11,7 +11,10 @@
         {"text": "Oi, tudo bem?"},
         {"text": "Bom dia"},
         {"text": "Quero iniciar o atendimento"},
-        {"text": "Podemos conversar?"}
+        {"text": "Podemos conversar?"},
+        {"text": "Boa noite"},
+        {"text": "Quero começar uma conversa"},
+        {"text": "Vamos iniciar"}
       ]
     },
     {

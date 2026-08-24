@@ -74,9 +74,8 @@ class WatsonAssistantService:
     def __init__(self, settings: Settings, *, client: Any | None = None) -> None:
         self._settings = settings
         self._profile = settings.watson_api_profile
-        self._assistant_id = (
-            settings.watson_environment_id or settings.watson_assistant_id
-        )
+        self._assistant_id = settings.watson_assistant_id
+        self._environment_id = settings.watson_environment_id
         self._workspace_id = settings.watson_workspace_id
         self._client = client or self._build_client(settings)
 
@@ -119,13 +118,16 @@ class WatsonAssistantService:
     def _respond_v2(self, message: str, conversation: Conversation) -> dict[str, Any]:
         if not conversation.provider_session_id:
             session = self._client.create_session(
-                assistant_id=self._assistant_id
+                assistant_id=self._assistant_id,
+                environment_id=self._environment_id,
             ).get_result()
             conversation.provider_session_id = session["session_id"]
         return self._client.message(
             assistant_id=self._assistant_id,
+            environment_id=self._environment_id,
             session_id=conversation.provider_session_id,
             input={"message_type": "text", "text": message},
+            user_id=conversation.conversation_id,
         ).get_result()
 
     def _respond_v1(self, message: str, conversation: Conversation) -> dict[str, Any]:
@@ -149,6 +151,7 @@ class WatsonAssistantService:
         try:
             self._client.delete_session(
                 assistant_id=self._assistant_id,
+                environment_id=self._environment_id,
                 session_id=conversation.provider_session_id,
             ).get_result()
         except Exception as exc:
