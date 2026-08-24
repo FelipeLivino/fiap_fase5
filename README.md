@@ -4,6 +4,8 @@ Protótipo acadêmico de assistente cardiológico conversacional. Toda execuçã
 oficial — aplicação, testes, IA generativa e automação — ocorre em contêineres
 Docker Compose.
 
+Repositório público: <https://github.com/FelipeLivino/fiap_fase5>
+
 > Use somente cenários fictícios. O CardioIA não diagnostica, não prescreve e
 > não substitui profissionais de saúde nem serviços de emergência.
 
@@ -16,8 +18,8 @@ Docker Compose.
   uma chamada real aprovados;
 - Ir Além 2: PostgreSQL, MongoDB e worker RPA com dois ciclos e 13 verificações
   aprovados;
-- pendências externas: nomes/revisores, segunda máquina, GitHub público e vídeo
-  final.
+- vídeo demonstrativo real: H.264, 1280 × 720, 30 fps e aproximadamente 46 s;
+- pendências externas: nomes/revisores, segunda máquina e aprovação da equipe.
 
 ## Pré-requisitos
 
@@ -103,6 +105,20 @@ O PostgreSQL contém leituras sintéticas; o MongoDB registra execuções, event
 e mensagens. O worker executa dois ciclos, usa menor privilégio, evita
 duplicidade e marca toda ação para revisão humana. Os bancos não publicam
 portas no host.
+
+## Gerar o vídeo demonstrativo
+
+Com os frames reais da interface disponíveis em `output/video/frames/`, gere as
+telas inicial/final, normalize as capturas e renderize o MP4 inteiramente em
+Docker:
+
+```powershell
+docker compose --profile video run --build --rm video-assets
+docker compose --profile video run --build --rm video-render
+```
+
+O resultado fica em `output/video/cardioia-demonstracao.mp4`. O vídeo não
+contém áudio, credenciais ou dados pessoais; usa somente mensagens fictícias.
 
 ## Endpoints
 

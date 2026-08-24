@@ -24,3 +24,4 @@ tmp/
 docs/evidencias/*
 !docs/evidencias/.gitkeep
 output/pdf/*.png
+output/video/frames/

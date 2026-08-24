@@ -20,8 +20,11 @@
       <section class="notice" aria-label="Aviso importante">
         <strong>Não insira dados pessoais nem informações reais de saúde.</strong>
         Este protótipo não diagnostica, não prescreve e não substitui atendimento profissional.
-        Quando a integração final estiver ativa, as mensagens fictícias serão processadas pelo
-        serviço externo IBM Watson Assistant.
+        {% if assistant_mode == "watson" %}
+        As mensagens fictícias desta execução são processadas pelo IBM Watson Assistant.
+        {% else %}
+        Esta execução usa respostas locais simuladas e não envia mensagens ao Watson.
+        {% endif %}
         Em uma urgência no Brasil, ligue para o SAMU 192 ou procure um serviço de emergência.
       </section>
 

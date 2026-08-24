@@ -104,6 +104,66 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  video-assets:
+    build:
+      context: .
+      dockerfile: Dockerfile.video
+    image: cardioia-video:local
+    profiles:
+      - video
+    entrypoint:
+      - python3
+    command:
+      - /tools/generate_video_assets.py
+    environment:
+      VIDEO_FRAMES_DIR: /work/output/frames
+    volumes:
+      - ./output/video:/work/output
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  video-render:
+    build:
+      context: .
+      dockerfile: Dockerfile.video
+    image: cardioia-video:local
+    profiles:
+      - video
+    command:
+      - -y
+      - -f
+      - concat
+      - -safe
+      - "0"
+      - -i
+      - video/sequence.txt
+      - -vf
+      - scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=white,fps=30,format=yuv420p
+      - -c:v
+      - libx264
+      - -preset
+      - medium
+      - -crf
+      - "20"
+      - -movflags
+      - +faststart
+      - output/cardioia-demonstracao.mp4
+    volumes:
+      - ./video:/work/video:ro
+      - ./output/video:/work/output
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
   rpa-postgres:
     image: postgres:17-alpine
     profiles:

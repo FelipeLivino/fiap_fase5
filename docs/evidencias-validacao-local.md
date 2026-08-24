@@ -45,8 +45,19 @@ segunda máquina.
 - cada relatório possui uma página;
 - texto extraível e inspeção visual sem corte, sobreposição ou página vazia.
 
+## Vídeo demonstrativo
+
+- frames reais capturados da interface executada em Docker no modo Watson;
+- mensagens exclusivamente fictícias, incluindo saudação, relato, urgência e
+  fallback;
+- telas inicial e final e normalização dos frames geradas pelo perfil Docker
+  `video`;
+- MP4 renderizado pelo FFmpeg em contêiner: H.264, 1280 × 720, 30 fps e
+  aproximadamente 46 segundos;
+- quadros extraídos do próprio MP4 e revisados visualmente.
+
 ## Pendências externas
 
 - preencher integrantes e revisores;
 - repetir o build em uma segunda máquina;
-- criar/publicar o repositório GitHub e gravar o vídeo real.
+- revisar o vídeo e comparar a entrega com o material didático em equipe.

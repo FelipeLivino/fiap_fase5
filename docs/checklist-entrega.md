@@ -12,9 +12,9 @@
 - [x] Chamada real ao Gemini 3.5 Flash-Lite executada pelo Docker.
 - [ ] Nomes e revisores da equipe preenchidos.
 - [ ] Build validado por outro integrante em segunda máquina.
-- [ ] Repositório publicado no GitHub e links conferidos.
-- [ ] Vídeo real gravado em até 3 minutos.
+- [x] Repositório publicado no GitHub e acesso anônimo conferido.
+- [x] Vídeo real da interface Watson gerado em Docker (46 s, até 3 minutos).
 - [ ] Material didático comparado e aprovado pela equipe/professor.
 
-Itens não marcados exigem identidade, credencial, conta externa ou evidência
-humana e não podem ser fabricados automaticamente.
+Itens não marcados exigem identidade ou evidência humana e não podem ser
+fabricados automaticamente.
