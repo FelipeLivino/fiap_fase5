@@ -1,0 +1,205 @@
+{
+  "name": "CardioIA - Atendimento Inicial Fictício",
+  "description": "Protótipo acadêmico. Não diagnostica, não prescreve e não processa dados reais.",
+  "language": "pt-br",
+  "intents": [
+    {
+      "intent": "saudacao",
+      "description": "Início da conversa",
+      "examples": [
+        {"text": "Olá"},
+        {"text": "Oi, tudo bem?"},
+        {"text": "Bom dia"},
+        {"text": "Quero iniciar o atendimento"},
+        {"text": "Podemos conversar?"}
+      ]
+    },
+    {
+      "intent": "ajuda",
+      "description": "Solicitação de ajuda ou explicação do protótipo",
+      "examples": [
+        {"text": "Como você pode me ajudar?"},
+        {"text": "O que este assistente faz?"},
+        {"text": "Quais perguntas posso fazer?"},
+        {"text": "Preciso de ajuda"},
+        {"text": "Explique como funciona"},
+        {"text": "Quais cenários fictícios posso informar?"},
+        {"text": "Em que tipo de relato você ajuda?"},
+        {"text": "O que aceita como entrada?"}
+      ]
+    },
+    {
+      "intent": "relatar_sintoma",
+      "description": "Relato fictício inicial sem produzir diagnóstico",
+      "examples": [
+        {"text": "No cenário fictício senti palpitações"},
+        {"text": "Estou simulando uma tontura"},
+        {"text": "Quero registrar falta de ar leve no exercício simulado"},
+        {"text": "Senti desconforto no peito no exemplo"},
+        {"text": "Minha frequência fictícia ficou acelerada"},
+        {"text": "Quero relatar um sintoma simulado"}
+      ]
+    },
+    {
+      "intent": "confirmar",
+      "description": "Confirmação da informação apresentada",
+      "examples": [
+        {"text": "Sim"},
+        {"text": "Isso mesmo"},
+        {"text": "Correto"},
+        {"text": "Pode continuar"},
+        {"text": "Confirmo"}
+      ]
+    },
+    {
+      "intent": "negar",
+      "description": "Correção ou negação",
+      "examples": [
+        {"text": "Não"},
+        {"text": "Está incorreto"},
+        {"text": "Quero corrigir"},
+        {"text": "Não foi isso"},
+        {"text": "Preciso alterar a informação"}
+      ]
+    },
+    {
+      "intent": "encerrar",
+      "description": "Encerramento voluntário",
+      "examples": [
+        {"text": "Encerrar"},
+        {"text": "Obrigado, era isso"},
+        {"text": "Até logo"},
+        {"text": "Finalizar conversa"},
+        {"text": "Tchau"},
+        {"text": "Pode encerrar por aqui"},
+        {"text": "Quero terminar a conversa"},
+        {"text": "Vou finalizar por agora"}
+      ]
+    },
+    {
+      "intent": "sinal_urgencia",
+      "description": "Frases fictícias que exigem resposta fixa de segurança",
+      "examples": [
+        {"text": "Estou com dor forte no peito"},
+        {"text": "Desmaiei e estou com suor frio"},
+        {"text": "Sinto falta de ar intensa"},
+        {"text": "A dor no peito é muito forte e repentina"},
+        {"text": "Estou simulando desmaio com dor forte no peito"},
+        {"text": "Não consigo respirar direito neste cenário"}
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "entity": "sintoma",
+      "description": "Sintomas mencionados em cenários exclusivamente fictícios",
+      "fuzzy_match": true,
+      "values": [
+        {"type": "synonyms", "value": "palpitacao", "synonyms": ["palpitação", "coração acelerado", "batimento acelerado"]},
+        {"type": "synonyms", "value": "tontura", "synonyms": ["tonto", "cabeça girando"]},
+        {"type": "synonyms", "value": "falta_ar", "synonyms": ["falta de ar", "respiração difícil", "cansaço para respirar"]},
+        {"type": "synonyms", "value": "desconforto_peito", "synonyms": ["desconforto no peito", "pressão no peito", "incômodo no peito"]}
+      ]
+    },
+    {
+      "entity": "duracao",
+      "description": "Faixa temporal informada pelo usuário",
+      "fuzzy_match": true,
+      "values": [
+        {"type": "synonyms", "value": "minutos", "synonyms": ["minuto", "minutos"]},
+        {"type": "synonyms", "value": "horas", "synonyms": ["hora", "horas"]},
+        {"type": "synonyms", "value": "dias", "synonyms": ["dia", "dias"]}
+      ]
+    },
+    {
+      "entity": "intensidade",
+      "description": "Descrição subjetiva, sem interpretação clínica",
+      "fuzzy_match": true,
+      "values": [
+        {"type": "synonyms", "value": "leve", "synonyms": ["fraca", "leve"]},
+        {"type": "synonyms", "value": "moderada", "synonyms": ["média", "moderada"]},
+        {"type": "synonyms", "value": "forte", "synonyms": ["intensa", "forte", "muito forte"]}
+      ]
+    }
+  ],
+  "dialog_nodes": [
+    {
+      "dialog_node": "node_welcome",
+      "title": "Boas-vindas e limites",
+      "conditions": "welcome",
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Olá! Sou o CardioIA, um protótipo acadêmico. Use apenas informações fictícias. Não faço diagnóstico nem prescrição. Como posso ajudar no cenário simulado?"}]}]}
+    },
+    {
+      "dialog_node": "node_urgencia",
+      "title": "Segurança - prioridade máxima",
+      "conditions": "#sinal_urgencia",
+      "previous_sibling": "node_welcome",
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Isso pode representar uma urgência. No Brasil, ligue agora para o SAMU 192 ou procure imediatamente um serviço de emergência. Não espere uma resposta deste protótipo."}]}]}
+    },
+    {
+      "dialog_node": "node_saudacao",
+      "title": "Saudação",
+      "conditions": "#saudacao",
+      "previous_sibling": "node_urgencia",
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Olá! Posso organizar um relato inicial fictício, explicar os limites do protótipo ou encerrar a conversa. O que deseja simular?"}]}]}
+    },
+    {
+      "dialog_node": "node_ajuda",
+      "title": "Ajuda",
+      "conditions": "#ajuda",
+      "previous_sibling": "node_saudacao",
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Descreva um cenário fictício com o que foi sentido, há quanto tempo e a intensidade. Eu apenas organizarei o relato; não farei avaliação médica."}]}]}
+    },
+    {
+      "dialog_node": "node_relato",
+      "title": "Coleta do relato",
+      "conditions": "#relatar_sintoma",
+      "previous_sibling": "node_ajuda",
+      "context": {"em_confirmacao": true},
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Entendi o relato fictício. Informe, se souber, há quanto tempo ocorreu e como você descreveria a intensidade. Depois confirme se o registro está correto."}]}]}
+    },
+    {
+      "dialog_node": "node_confirmar",
+      "title": "Confirmação",
+      "conditions": "#confirmar && $em_confirmacao == true",
+      "previous_sibling": "node_relato",
+      "context": {"em_confirmacao": false, "relato_confirmado": true},
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Registro fictício confirmado. Ele serve apenas para demonstrar organização conversacional e não constitui avaliação médica."}]}]}
+    },
+    {
+      "dialog_node": "node_negar",
+      "title": "Correção",
+      "conditions": "#negar && $em_confirmacao == true",
+      "previous_sibling": "node_confirmar",
+      "context": {"em_confirmacao": false},
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Sem problema. Escreva novamente apenas a informação fictícia que deseja registrar."}]}]}
+    },
+    {
+      "dialog_node": "node_encerrar",
+      "title": "Encerramento",
+      "conditions": "#encerrar",
+      "previous_sibling": "node_negar",
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Conversa encerrada. Este protótipo não substitui orientação profissional. Em urgência no Brasil, procure um serviço de emergência ou ligue 192."}]}]}
+    },
+    {
+      "dialog_node": "node_fallback",
+      "title": "Fallback",
+      "conditions": "anything_else",
+      "previous_sibling": "node_encerrar",
+      "output": {"generic": [{"response_type": "text", "values": [{"text": "Não consegui relacionar a mensagem ao fluxo acadêmico. Tente escrever 'ajuda', relatar um cenário fictício ou digitar 'encerrar'."}]}]}
+    }
+  ],
+  "counterexamples": [
+    {"text": "Qual é o diagnóstico?"},
+    {"text": "Qual remédio devo tomar?"}
+  ],
+  "metadata": {
+    "cardioia_version": "1.0.0",
+    "exported_at": "2026-08-24",
+    "api_version": {"major_version": "v1", "minor_version": "2018-09-20"}
+  },
+  "system_settings": {
+    "disambiguation": {"prompt": "Você quis dizer:", "none_of_the_above_prompt": "Nenhuma das opções"},
+    "human_agent_assist": {"prompt": ""}
+  }
+}

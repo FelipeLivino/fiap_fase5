@@ -1,0 +1,26 @@
+# Configuração e segredos locais
+.env
+.secrets/*
+!.secrets/README.md
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# IDE e sistema operacional
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs e dados temporários
+*.log
+tmp/
+docs/evidencias/*
+!docs/evidencias/.gitkeep
+output/pdf/*.png

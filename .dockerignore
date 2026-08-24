@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.secrets/
+.venv/
+venv/
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+tmp/
+docs/
+enunciado.md
+plano_implementacao.md

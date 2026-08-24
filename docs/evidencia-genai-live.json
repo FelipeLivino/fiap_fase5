@@ -1,0 +1,32 @@
+{
+  "data_execucao": "2026-08-24",
+  "execucao": "docker compose --profile genai-live run --build --rm genai-live",
+  "modelo": "gemini-3.5-flash-lite",
+  "entrada": "genai/examples/entrada-01.txt",
+  "resultado": {
+    "status": "ok",
+    "sintomas": [
+      {
+        "nome": "palpitações",
+        "duracao": "20 minutos",
+        "intensidade": "forte"
+      }
+    ],
+    "medidas": [
+      {
+        "tipo": "frequencia_cardiaca",
+        "valor": 110.0,
+        "unidade": "bpm"
+      }
+    ],
+    "medicamentos_mencionados": [],
+    "campos_ausentes": [],
+    "inconsistencias": [],
+    "trechos_fonte": [
+      "palpitações fortes por 20 minutos",
+      "110 bpm"
+    ],
+    "observacao": "Dados extraídos de cenário fictício; não constituem avaliação médica."
+  },
+  "seguranca": "A credencial não foi registrada nesta evidência, nos logs ou na imagem."
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CardioIA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">FIAP · Fase 5</p>
+          <h1>CardioIA</h1>
+          <p>Assistente cardiológico conversacional — protótipo acadêmico</p>
+        </div>
+        <span class="mode-badge">Modo · {{ assistant_mode }}</span>
+      </header>
+
+      <section class="notice" aria-label="Aviso importante">
+        <strong>Não insira dados pessoais nem informações reais de saúde.</strong>
+        Este protótipo não diagnostica, não prescreve e não substitui atendimento profissional.
+        Quando a integração final estiver ativa, as mensagens fictícias serão processadas pelo
+        serviço externo IBM Watson Assistant.
+        Em uma urgência no Brasil, ligue para o SAMU 192 ou procure um serviço de emergência.
+      </section>
+
+      <section class="chat-card" aria-label="Conversa com o CardioIA">
+        <div id="messages" class="messages" role="log" aria-live="polite" aria-relevant="additions">
+          <article class="message assistant-message">
+            <span class="message-author">CardioIA</span>
+            <p>O CardioIA está ativo no Docker. Envie “Olá” para iniciar com dados fictícios.</p>
+          </article>
+        </div>
+
+        <p id="status" class="status" aria-live="polite"></p>
+
+        <form id="chat-form" class="chat-form">
+          <label for="message-input">Sua mensagem</label>
+          <div class="input-row">
+            <input
+              id="message-input"
+              name="message"
+              type="text"
+              maxlength="1000"
+              autocomplete="off"
+              placeholder="Digite uma mensagem fictícia"
+              required
+            >
+            <button id="send-button" type="submit">Enviar</button>
+          </div>
+        </form>
+
+        <button id="new-conversation" class="secondary-button" type="button">
+          Nova conversa
+        </button>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </body>
+</html>
