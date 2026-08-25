@@ -6,10 +6,23 @@ services:
       context: .
       dockerfile: Dockerfile
     image: cardioia-mvp:local
-    env_file:
-      - .env
-    secrets:
-      - watson_api_key
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_HOST: ${APP_HOST:-0.0.0.0}
+      APP_PORT: ${APP_PORT:-5000}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      ASSISTANT_MODE: ${ASSISTANT_MODE:-mock}
+      MAX_MESSAGE_CHARS: ${MAX_MESSAGE_CHARS:-1000}
+      CONVERSATION_TTL_SECONDS: ${CONVERSATION_TTL_SECONDS:-900}
+      WATSON_API_KEY: ${WATSON_API_KEY:-}
+      WATSON_API_PROFILE: ${WATSON_API_PROFILE:-v2}
+      WATSON_SERVICE_URL: ${WATSON_SERVICE_URL:-}
+      WATSON_ASSISTANT_ID: ${WATSON_ASSISTANT_ID:-}
+      WATSON_ENVIRONMENT_ID: ${WATSON_ENVIRONMENT_ID:-}
+      WATSON_WORKSPACE_ID: ${WATSON_WORKSPACE_ID:-}
+      WATSON_API_VERSION: ${WATSON_API_VERSION:-2024-08-25}
+      WATSON_TIMEOUT_SECONDS: ${WATSON_TIMEOUT_SECONDS:-10}
     ports:
       - "127.0.0.1:${CARDIOIA_HOST_PORT:-5000}:5000"
     init: true
@@ -92,10 +105,8 @@ services:
       - --input-file
       - genai/examples/entrada-01.txt
     environment:
-      GEMINI_API_KEY_FILE: /run/secrets/gemini_api_key
-      GEMINI_MODEL: gemini-3.5-flash-lite
-    secrets:
-      - gemini_api_key
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash-lite}
     read_only: true
     tmpfs:
       - /tmp
@@ -171,10 +182,8 @@ services:
     environment:
       POSTGRES_DB: cardioia
       POSTGRES_USER: cardioia_owner
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_root_password
-    secrets:
-      - postgres_root_password
-      - rpa_postgres_password
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PASSWORD:-}
+      RPA_POSTGRES_PASSWORD: ${RPA_POSTGRES_PASSWORD:-}
     volumes:
       - rpa-postgres-data:/var/lib/postgresql/data
       - ./rpa/postgres/init.sh:/docker-entrypoint-initdb.d/10-cardioia.sh:ro
@@ -195,14 +204,13 @@ services:
       - rpa
     environment:
       MONGO_INITDB_ROOT_USERNAME: cardioia_owner
-      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_root_password
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-}
       MONGO_INITDB_DATABASE: cardioia
-    secrets:
-      - mongo_root_password
-      - rpa_mongo_password
+      RPA_MONGO_PASSWORD: ${RPA_MONGO_PASSWORD:-}
     volumes:
       - rpa-mongo-data:/data/db
-      - ./rpa/mongo/init.js:/docker-entrypoint-initdb.d/10-cardioia.js:ro
+      - ./rpa/mongo/init.sh:/docker-entrypoint-initdb.d/10-cardioia.sh:ro
+      - ./rpa/mongo/init.js.tpl:/docker-entrypoint-initdb.d/10-cardioia.js.tpl:ro
     networks:
       - rpa-internal
     healthcheck:
@@ -210,7 +218,7 @@ services:
         - CMD-SHELL
         - >-
           mongosh --quiet --username cardioia_owner
-          --password "$$(cat /run/secrets/mongo_root_password)"
+          --password "$${MONGO_INITDB_ROOT_PASSWORD}"
           --authenticationDatabase admin
           --eval "db.adminCommand('ping').ok" | grep 1
       interval: 5s
@@ -229,15 +237,12 @@ services:
       POSTGRES_HOST: rpa-postgres
       POSTGRES_DB: cardioia
       RPA_POSTGRES_USER: cardioia_rpa
-      RPA_POSTGRES_PASSWORD_FILE: /run/secrets/rpa_postgres_password
+      RPA_POSTGRES_PASSWORD: ${RPA_POSTGRES_PASSWORD:-}
       MONGO_HOST: rpa-mongo
       RPA_MONGO_USER: cardioia_rpa
-      RPA_MONGO_PASSWORD_FILE: /run/secrets/rpa_mongo_password
+      RPA_MONGO_PASSWORD: ${RPA_MONGO_PASSWORD:-}
       RPA_MAX_CYCLES: 2
       RPA_INTERVAL_SECONDS: 2
-    secrets:
-      - rpa_postgres_password
-      - rpa_mongo_password
     depends_on:
       rpa-postgres:
         condition: service_healthy
@@ -263,11 +268,8 @@ services:
       - -m
       - rpa.test_rpa
     environment:
-      RPA_POSTGRES_PASSWORD_FILE: /run/secrets/rpa_postgres_password
-      RPA_MONGO_PASSWORD_FILE: /run/secrets/rpa_mongo_password
-    secrets:
-      - rpa_postgres_password
-      - rpa_mongo_password
+      RPA_POSTGRES_PASSWORD: ${RPA_POSTGRES_PASSWORD:-}
+      RPA_MONGO_PASSWORD: ${RPA_MONGO_PASSWORD:-}
     depends_on:
       rpa-worker:
         condition: service_completed_successfully
@@ -280,20 +282,6 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
-
-secrets:
-  watson_api_key:
-    file: ./.secrets/watson_api_key
-  gemini_api_key:
-    file: ./.secrets/gemini_api_key
-  postgres_root_password:
-    file: ./.secrets/postgres_root_password
-  rpa_postgres_password:
-    file: ./.secrets/rpa_postgres_password
-  mongo_root_password:
-    file: ./.secrets/mongo_root_password
-  rpa_mongo_password:
-    file: ./.secrets/rpa_mongo_password
 
 networks:
   rpa-internal:

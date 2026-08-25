@@ -25,8 +25,8 @@ embutida.
 ## Implementação
 
 `GeminiExtractor` usa o SDK oficial `google-genai`, o modelo estável
-`gemini-3.5-flash-lite` e lê a chave do Google AI Studio em
-`/run/secrets/gemini_api_key`. O modo `DeterministicExtractor` é uma
+`gemini-3.5-flash-lite` e lê `GEMINI_API_KEY`, injetada pelo Compose a partir do
+`.env` local. O modo `DeterministicExtractor` é uma
 referência offline para testes repetíveis e não é apresentado como IA
 generativa. Ambos implementam o mesmo contrato, permitindo comparar o schema e
 as guardrails sem gastar quota.
@@ -40,8 +40,8 @@ automaticamente outro serviço.
 
 Em 24/08/2026, a execução real pelo perfil `genai-live` processou o exemplo
 fictício, retornou JSON válido segundo o schema e preservou os dois
-trechos-fonte esperados. A chave ficou apenas no secret local ignorado pelo Git
-e excluído do contexto de build.
+trechos-fonte esperados. A chave ficou apenas no `.env` local ignorado pelo Git,
+excluído do contexto de build e injetado somente no contêiner live.
 
 Modelos generativos são probabilísticos e podem omitir ou alterar informações
 mesmo com schema. JSON válido não significa conteúdo correto. Os exemplos não

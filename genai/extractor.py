@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-from pathlib import Path
 
 from genai.schemas import ExtracaoClinica, Medida, Sintoma
 
@@ -129,10 +128,10 @@ class DeterministicExtractor:
 
 
 class GeminiExtractor:
-    def __init__(self, *, api_key_file: str, model: str) -> None:
-        api_key = Path(api_key_file).read_text(encoding="utf-8").strip()
+    def __init__(self, *, api_key: str, model: str) -> None:
+        api_key = api_key.strip()
         if not api_key or api_key == "mock-not-used":
-            raise RuntimeError("O secret do Gemini está ausente ou contém placeholder.")
+            raise RuntimeError("GEMINI_API_KEY está ausente ou contém placeholder.")
         from google import genai
 
         self._client = genai.Client(api_key=api_key)

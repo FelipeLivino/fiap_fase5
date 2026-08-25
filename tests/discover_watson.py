@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_cloud_sdk_core.api_exception import ApiException
@@ -10,10 +9,7 @@ from ibm_watson import AssistantV1, AssistantV2
 
 
 def main() -> int:
-    api_key_file = Path(
-        os.getenv("WATSON_API_KEY_FILE", "/run/secrets/watson_api_key")
-    )
-    api_key = api_key_file.read_text(encoding="utf-8").strip()
+    api_key = os.environ["WATSON_API_KEY"]
     service_url = os.environ["WATSON_SERVICE_URL"]
     version = os.getenv("WATSON_API_VERSION", "2024-08-25")
 

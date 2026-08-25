@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 from backend.conversation_service import Conversation
@@ -84,8 +83,7 @@ class WatsonAssistantService:
         from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
         from ibm_watson import AssistantV1, AssistantV2
 
-        api_key = Path(settings.watson_api_key_file).read_text(encoding="utf-8").strip()
-        authenticator = IAMAuthenticator(api_key)
+        authenticator = IAMAuthenticator(settings.watson_api_key)
         if settings.watson_api_profile == "v2":
             client = AssistantV2(
                 version=settings.watson_api_version,

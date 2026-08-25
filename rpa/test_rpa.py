@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 from urllib.parse import quote_plus
 
 import psycopg
@@ -10,7 +9,10 @@ from pymongo.errors import OperationFailure, ServerSelectionTimeoutError
 
 
 def secret(name: str) -> str:
-    return Path(os.environ[name]).read_text(encoding="utf-8").strip()
+    value = os.getenv(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Variável de ambiente obrigatória ausente: {name}")
+    return value
 
 
 def expect_failure(callback, label: str) -> None:
@@ -22,7 +24,7 @@ def expect_failure(callback, label: str) -> None:
 
 
 def main() -> int:
-    pg_password = secret("RPA_POSTGRES_PASSWORD_FILE")
+    pg_password = secret("RPA_POSTGRES_PASSWORD")
     pg_dsn = (
         "host=rpa-postgres dbname=cardioia user=cardioia_rpa "
         f"password={pg_password} connect_timeout=5"
@@ -43,7 +45,7 @@ def main() -> int:
         "privilégio administrativo PostgreSQL",
     )
 
-    mongo_password = quote_plus(secret("RPA_MONGO_PASSWORD_FILE"))
+    mongo_password = quote_plus(secret("RPA_MONGO_PASSWORD"))
     client = MongoClient(
         f"mongodb://cardioia_rpa:{mongo_password}@rpa-mongo:27017/cardioia?authSource=cardioia",
         serverSelectionTimeoutMS=3000,

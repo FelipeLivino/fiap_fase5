@@ -1,7 +1,5 @@
 # Configuração e segredos locais
 .env
-.secrets/*
-!.secrets/README.md
 
 # Python
 __pycache__/

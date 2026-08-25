@@ -31,19 +31,10 @@ if ($serviceUri.Scheme -ne "https" -or $serviceUri.Host -notmatch '(^|\.)assista
     throw "A URL não pertence ao endpoint público do watsonx Assistant."
 }
 
-$secretDirectory = Join-Path $ProjectRoot ".secrets"
-$secretPath = Join-Path $secretDirectory "watson_api_key"
 $environmentPath = Join-Path $ProjectRoot ".env"
 if (-not (Test-Path -LiteralPath $environmentPath -PathType Leaf)) {
     throw "Arquivo .env não encontrado no projeto."
 }
-
-[System.IO.Directory]::CreateDirectory($secretDirectory) | Out-Null
-[System.IO.File]::WriteAllText(
-    $secretPath,
-    $apiKey,
-    [System.Text.UTF8Encoding]::new($false)
-)
 
 $environmentLines = [System.Collections.Generic.List[string]]::new()
 Get-Content -LiteralPath $environmentPath | ForEach-Object {
@@ -63,6 +54,7 @@ function Set-EnvironmentValue {
 }
 
 Set-EnvironmentValue -Name "WATSON_API_PROFILE" -Value "v2"
+Set-EnvironmentValue -Name "WATSON_API_KEY" -Value $apiKey
 Set-EnvironmentValue -Name "WATSON_SERVICE_URL" -Value $serviceUrl
 Set-EnvironmentValue -Name "WATSON_API_VERSION" -Value "2024-08-25"
 [System.IO.File]::WriteAllLines(

@@ -280,7 +280,7 @@ Se a equipe optar por uma estrutura mais simples, ela poderá reduzir a quantida
 O `.env.example` deverá declarar apenas os nomes esperados, por exemplo:
 
 ```dotenv
-WATSON_API_KEY_FILE=/run/secrets/watson_api_key
+WATSON_API_KEY=
 WATSON_SERVICE_URL=
 WATSON_ASSISTANT_ID=
 WATSON_ENVIRONMENT_ID=
@@ -292,11 +292,16 @@ APP_HOST=0.0.0.0
 APP_PORT=5000
 CARDIOIA_HOST_PORT=5000
 CONVERSATION_TTL_SECONDS=900
+GEMINI_API_KEY=
+POSTGRES_ROOT_PASSWORD=
+RPA_POSTGRES_PASSWORD=
+MONGO_ROOT_PASSWORD=
+RPA_MONGO_PASSWORD=
 ```
 
-Os nomes exatos devem ser ajustados ao SDK e à versão usados em aula. `WATSON_ENVIRONMENT_ID` e `WATSON_WORKSPACE_ID` representam perfis alternativos; a equipe manterá apenas o conjunto exigido pelo perfil selecionado. O `.env` conterá somente configuração não secreta. A chave do Watson ficará no arquivo local ignorado `.secrets/watson_api_key` e será montada pelo Compose em `/run/secrets/watson_api_key`; o backend lerá o caminho indicado por `WATSON_API_KEY_FILE` e passará o valor ao SDK sem registrá-lo.
+Os nomes exatos devem ser ajustados ao SDK e à versão usados em aula. `WATSON_ENVIRONMENT_ID` e `WATSON_WORKSPACE_ID` representam perfis alternativos; a equipe manterá apenas o conjunto exigido pelo perfil selecionado. O `.env` local conterá configuração e segredos, permanecerá ignorado pelo Git e nunca será mostrado em evidências. O Compose usará esse arquivo para interpolar os valores e injetará em cada contêiner somente as variáveis necessárias; o backend passará `WATSON_API_KEY` diretamente ao SDK sem registrá-la.
 
-O repositório e o contexto de build deverão ignorar `.env`, `.secrets/`, outros arquivos de credenciais, caches locais e evidências por meio de `.gitignore` e `.dockerignore`. Nenhuma credencial será usada em instruções `ARG`, `ENV` ou `RUN` do `Dockerfile`. O mesmo padrão de secret file será aplicado a senhas dos bancos caso o Ir Além 2 seja implementado.
+O repositório e o contexto de build deverão ignorar `.env`, outros arquivos de credenciais, caches locais e evidências por meio de `.gitignore` e `.dockerignore`. Nenhuma credencial será usada em instruções `ARG`, `ENV` ou `RUN` do `Dockerfile`. O mesmo padrão de variáveis do `.env`, com injeção restrita por serviço, será aplicado ao Gemini e às senhas dos bancos do Ir Além 2.
 
 `APP_HOST=0.0.0.0` é necessário para que o processo Flask seja acessível através da rede do contêiner. A exposição no computador continuará restrita pelo mapeamento `127.0.0.1:${CARDIOIA_HOST_PORT:-5000}:5000` do Compose. `APP_DEBUG` permanecerá falso na demonstração.
 
@@ -308,8 +313,7 @@ O caminho oficial de execução será:
 
 ```powershell
 Copy-Item .env.example .env
-# preencher a configuração não secreta e criar .secrets/watson_api_key
-# por um método local seguro, sem imprimir o valor no terminal ou no vídeo
+# preencher configuração e segredos no .env sem exibi-los no terminal ou vídeo
 docker compose config --quiet
 docker compose build --no-cache
 docker compose up --wait
@@ -331,7 +335,7 @@ O `Dockerfile` deverá:
 8. iniciar o Flask com `APP_HOST=0.0.0.0` e `APP_DEBUG=false`;
 9. não conter chaves, `.env`, dados de teste privados ou credenciais em nenhuma camada.
 
-O `.dockerignore` deverá excluir pelo menos `.git`, `.env`, `.secrets/`, ambientes virtuais, `__pycache__`, caches, logs, bancos/dumps, evidências, uploads e arquivos temporários. A cópia no `Dockerfile` deverá ser seletiva sempre que possível.
+O `.dockerignore` deverá excluir pelo menos `.git`, `.env`, ambientes virtuais, `__pycache__`, caches, logs, bancos/dumps, evidências, uploads e arquivos temporários. A cópia no `Dockerfile` deverá ser seletiva sempre que possível.
 
 O `compose.yaml` deverá conter, no mínimo:
 
@@ -341,10 +345,10 @@ services:
     build:
       context: .
     image: cardioia-mvp:local
-    env_file:
-      - .env
-    secrets:
-      - watson_api_key
+    environment:
+      ASSISTANT_MODE: ${ASSISTANT_MODE:-mock}
+      WATSON_API_KEY: ${WATSON_API_KEY:-}
+      WATSON_SERVICE_URL: ${WATSON_SERVICE_URL:-}
     ports:
       - "127.0.0.1:${CARDIOIA_HOST_PORT:-5000}:5000"
     init: true
@@ -381,10 +385,6 @@ services:
     depends_on:
       cardioia-app:
         condition: service_healthy
-
-secrets:
-  watson_api_key:
-    file: ./.secrets/watson_api_key
 ```
 
 O trecho é uma referência para o plano; nomes e sintaxe finais serão validados pela versão do Compose instalada. O healthcheck consultará apenas o processo local e não chamará o Watson, evitando custo e falso estado de indisponibilidade quando o provedor externo falhar. O MVP não terá volume persistente nem bind mount de código na configuração final: reiniciar o contêiner encerra o contexto temporário, comportamento que deverá ser explicado e testado. A configuração não poderá usar modo privilegiado, rede do host ou montagem do socket Docker.
@@ -545,7 +545,7 @@ O número 192 e os exemplos de sinais de alerta deverão ser revisados contra as
 8. colocar antes do campo de mensagem o aviso sobre dados reais, processamento externo e limites do protótipo;
 9. configurar o processo Flask para escutar em `0.0.0.0:5000` dentro do contêiner;
 10. configurar no Compose o mapeamento `127.0.0.1:${CARDIOIA_HOST_PORT:-5000}:5000` e o healthcheck de `/health`;
-11. construir a imagem com usuário não-root e validar que `.env`, `.secrets/`, `.git`, caches e evidências não entram no contexto/imagem;
+11. construir a imagem com usuário não-root e validar que `.env`, `.git`, caches e evidências não entram no contexto/imagem;
 12. executar `docker compose config --quiet`, `docker compose build --no-cache` e `docker compose up --wait`;
 13. criar `tests/smoke_test.py` e o serviço/perfil `cardioia-test` com comando explícito.
 
@@ -819,8 +819,8 @@ O número 192 e os exemplos de sinais de alerta deverão ser revisados contra as
 | CT-D02 | Inicialização e saúde | Executar `docker compose up --build --wait`, consultar o estado e simular Watson indisponível. | `cardioia-app` fica `healthy`; a queda externa afeta o chat, mas não o healthcheck local. | Crítica |
 | CT-D03 | Porta publicada | Acessar `/health` e `/` localmente e tentar a mesma porta a partir de outra máquina da rede. | Serviço responde em `127.0.0.1:5000`, não é acessível remotamente e nenhuma porta desnecessária é publicada. | Crítica |
 | CT-D04 | Docker ponta a ponta | Conversar pelo navegador com o Flask executando somente no contêiner. | Navegador → contêiner → Watson → navegador funciona com contexto. | Crítica |
-| CT-D05 | Configuração inválida | Subir sem secret file/variável obrigatória e depois com credencial fictícia inválida. | Compose ou aplicação falha de forma controlada; segredo, corpo da mensagem e stack trace não aparecem nos logs. | Alta |
-| CT-D06 | Imagem e contêiner seguros | Inspecionar build, imagem/camadas e apenas metadados seguros do contêiner, sem abrir ou capturar o secret montado. | Valor secreto está ausente da imagem, camadas, Compose resolvido e logs; existe somente no mount read-only `/run/secrets/watson_api_key`; UID não é zero e não há modo privilegiado, host network ou socket Docker. | Crítica |
+| CT-D05 | Configuração inválida | Subir sem variável obrigatória e depois com credencial fictícia inválida. | Compose ou aplicação falha de forma controlada; segredo, corpo da mensagem e stack trace não aparecem nos logs. | Alta |
+| CT-D06 | Imagem e contêiner seguros | Inspecionar build e imagem/camadas; validar o Compose apenas com `config --quiet`, sem capturar ambiente resolvido ou `docker inspect`. | Valor secreto está ausente do Git, contexto de build, imagem, camadas e logs; variáveis vêm somente do `.env` local em runtime; UID não é zero e não há modo privilegiado, host network ou socket Docker. | Crítica |
 | CT-D07 | Parada e reinício | Parar/reiniciar o serviço após iniciar uma conversa. | Aplicação volta saudável; perda do contexto em memória é comunicada e nova conversa funciona. | Alta |
 | CT-D08 | Testes no contêiner | Executar `docker compose --profile test run --rm cardioia-test`. | Smoke tests reais executam pelo comando explícito e terminam com sucesso sem ambiente Python local. | Alta |
 | CT-D09 | Segunda máquina | Outro integrante segue o README em ambiente limpo com apenas Docker/Compose. | Build, healthcheck, interface e conversa ponta a ponta são reproduzidos. | Crítica |
@@ -1221,7 +1221,7 @@ O MVP somente será considerado pronto quando:
 - [ ] interface, `/health` e conversa real com o Watson funcionam pela porta publicada em `127.0.0.1`;
 - [ ] o contêiner executa como usuário não-root, sem modo privilegiado, host network ou socket Docker;
 - [ ] testes executam dentro do contêiner e o build limpo foi reproduzido em outra máquina;
-- [ ] `.env`, `.secrets/`, chaves e dados indevidos não aparecem no contexto de build, imagem ou camadas; valores secretos não aparecem no Compose resolvido nem nos logs;
+- [ ] `.env`, chaves e dados indevidos não aparecem no Git, contexto de build, imagem ou camadas; o Compose é validado somente com `config --quiet` e valores secretos não aparecem nos logs;
 - [ ] parada, reinício e perda do contexto em memória estão documentados e testados;
 - [ ] o README foi validado por outro integrante;
 - [ ] o relatório obrigatório possui 1 a 2 páginas;

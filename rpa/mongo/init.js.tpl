@@ -1,7 +1,4 @@
 const appDb = db.getSiblingDB("cardioia");
-const workerPassword = fs
-  .readFileSync("/run/secrets/rpa_mongo_password", "utf8")
-  .trim();
 
 appDb.createCollection("mensagens");
 appDb.createCollection("eventos");

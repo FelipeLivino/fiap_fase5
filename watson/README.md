@@ -27,11 +27,10 @@ IDs de instância ou dados reais.
    `WATSON_API_PROFILE=v2`, `WATSON_ASSISTANT_ID` e `WATSON_ENVIRONMENT_ID`.
 4. Para o workspace clássico usado diretamente, configure
    `WATSON_API_PROFILE=v1` e `WATSON_WORKSPACE_ID`.
-5. Coloque a chave somente em `.secrets/watson_api_key` e altere
+5. Preencha `WATSON_API_KEY` somente no `.env` local ignorado e altere
    `ASSISTANT_MODE=watson`.
 
 Em 24/08/2026, o workspace v1 foi preservado e sua modelagem foi migrada para
 sete Actions no assistente `Fiapinho`, plano Lite. A interface registrou sete
 ações sem erros, com 46 exemplos; o runtime v2 foi aprovado nos nove casos
-reais. IDs e credenciais permanecem somente nos arquivos locais ignorados pelo
-Git.
+reais. IDs e credenciais permanecem somente no `.env` local ignorado pelo Git.

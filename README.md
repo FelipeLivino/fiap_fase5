@@ -33,13 +33,16 @@ Python não precisa estar instalado no host.
 
 1. Copie `.env.example` para `.env` e mantenha `ASSISTANT_MODE=mock` para o
    fluxo padrão.
-2. Crie os arquivos locais necessários em `.secrets/`, seguindo
-   `.secrets/README.md`.
-3. Nunca versione `.env`, `.secrets/`, dados pessoais ou dados reais de saúde.
+2. Preencha no próprio `.env` as chaves do Watson e Gemini e as senhas locais
+   do perfil RPA.
+3. Nunca versione, exiba ou copie o `.env`, dados pessoais ou dados reais de
+   saúde.
 
-Os segredos são montados em `/run/secrets/`, não são variáveis de ambiente,
-estão ignorados pelo Git e são excluídos do contexto de build pelo
-`.dockerignore`.
+O Compose lê o `.env` somente em tempo de execução e injeta em cada contêiner
+apenas as variáveis necessárias ao respectivo serviço. O arquivo está ignorado
+pelo Git e excluído do contexto de build pelo `.dockerignore`; não execute nem
+registre `docker compose config` sem `--quiet` ou `docker inspect`, pois essas
+saídas podem revelar variáveis sensíveis.
 
 ## Executar o MVP
 
@@ -65,7 +68,7 @@ docker compose down
 
 O arquivo `.env` seleciona a API com `WATSON_API_PROFILE=v2` ou `v1`. Para v2,
 preencha URL, versão, Assistant ID e Environment ID; para v1, preencha URL,
-versão e workspace ID. Grave a chave apenas em `.secrets/watson_api_key` e altere
+versão e workspace ID. Preencha `WATSON_API_KEY` no `.env` e altere
 `ASSISTANT_MODE=watson`.
 
 Um arquivo de credenciais IBM no formato `ASSISTANT_URL`/
@@ -91,8 +94,8 @@ docker compose --profile genai run --rm genai-test
 docker compose --profile genai-live run --rm genai-live
 ```
 
-O perfil live usa `gemini-3.5-flash-lite`, lê
-`.secrets/gemini_api_key` como Docker secret e envia somente o exemplo fictício.
+O perfil live usa `gemini-3.5-flash-lite`, recebe `GEMINI_API_KEY` do `.env` em
+tempo de execução e envia somente o exemplo fictício.
 A saída estruturada não dispara nenhuma ação externa.
 
 ## Ir Além 2 — RPA híbrido

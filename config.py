@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from pathlib import Path
 
 
 def _as_bool(value: str | None, *, default: bool = False) -> bool:
@@ -32,7 +31,7 @@ class Settings:
     assistant_mode: str
     max_message_chars: int
     conversation_ttl_seconds: int
-    watson_api_key_file: str
+    watson_api_key: str
     watson_api_profile: str
     watson_service_url: str
     watson_assistant_id: str
@@ -58,9 +57,7 @@ class Settings:
             conversation_ttl_seconds=_as_int(
                 "CONVERSATION_TTL_SECONDS", 900, minimum=30
             ),
-            watson_api_key_file=os.getenv(
-                "WATSON_API_KEY_FILE", "/run/secrets/watson_api_key"
-            ),
+            watson_api_key=os.getenv("WATSON_API_KEY", "").strip(),
             watson_api_profile=os.getenv("WATSON_API_PROFILE", "v2").strip().lower(),
             watson_service_url=os.getenv("WATSON_SERVICE_URL", "").strip(),
             watson_assistant_id=os.getenv("WATSON_ASSISTANT_ID", "").strip(),
@@ -83,6 +80,7 @@ class Settings:
             raise RuntimeError("WATSON_API_PROFILE deve ser 'v1' ou 'v2'.")
 
         required_values = {
+            "WATSON_API_KEY": self.watson_api_key,
             "WATSON_SERVICE_URL": self.watson_service_url,
             "WATSON_API_VERSION": self.watson_api_version,
         }
@@ -99,8 +97,5 @@ class Settings:
                 "Configuração Watson incompleta: " + ", ".join(sorted(missing))
             )
 
-        secret_path = Path(self.watson_api_key_file)
-        if not secret_path.is_file():
-            raise RuntimeError("Secret file do Watson não foi encontrado.")
-        if secret_path.read_text(encoding="utf-8").strip() in {"", "mock-not-used"}:
-            raise RuntimeError("Secret file do Watson ainda contém um placeholder.")
+        if self.watson_api_key == "mock-not-used":
+            raise RuntimeError("WATSON_API_KEY ainda contém um placeholder.")

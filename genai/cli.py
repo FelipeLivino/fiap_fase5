@@ -23,9 +23,7 @@ def main() -> int:
     source = Path(args.input_file).read_text(encoding="utf-8")
     if args.mode == "gemini":
         extractor = GeminiExtractor(
-            api_key_file=os.getenv(
-                "GEMINI_API_KEY_FILE", "/run/secrets/gemini_api_key"
-            ),
+            api_key=os.getenv("GEMINI_API_KEY", ""),
             model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
         )
     else:

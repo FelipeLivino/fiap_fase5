@@ -13,13 +13,9 @@ SPEC_PATH = Path("watson/assistant-export.json")
 
 
 def client() -> AssistantV1:
-    api_key_file = Path(
-        os.getenv("WATSON_API_KEY_FILE", "/run/secrets/watson_api_key")
-    )
-    api_key = api_key_file.read_text(encoding="utf-8").strip()
     service = AssistantV1(
         version=os.getenv("WATSON_API_VERSION", "2024-08-25"),
-        authenticator=IAMAuthenticator(api_key),
+        authenticator=IAMAuthenticator(os.environ["WATSON_API_KEY"]),
     )
     service.set_service_url(os.environ["WATSON_SERVICE_URL"])
     return service

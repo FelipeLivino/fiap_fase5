@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-rpa_password="$(< /run/secrets/rpa_postgres_password)"
+: "${RPA_POSTGRES_PASSWORD:?RPA_POSTGRES_PASSWORD ausente}"
 
 psql --set ON_ERROR_STOP=1 \
   --username "$POSTGRES_USER" \
   --dbname "$POSTGRES_DB" \
-  --set rpa_password="$rpa_password" <<'SQL'
+  --set rpa_password="$RPA_POSTGRES_PASSWORD" <<'SQL'
 CREATE ROLE cardioia_rpa LOGIN PASSWORD :'rpa_password';
 
 CREATE TABLE leituras_simuladas (

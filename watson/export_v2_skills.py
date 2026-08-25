@@ -10,10 +10,9 @@ from ibm_watson import AssistantV2
 
 
 def client() -> AssistantV2:
-    key_file = Path(os.getenv("WATSON_API_KEY_FILE", "/run/secrets/watson_api_key"))
     service = AssistantV2(
         version=os.getenv("WATSON_API_VERSION", "2024-08-25"),
-        authenticator=IAMAuthenticator(key_file.read_text(encoding="utf-8").strip()),
+        authenticator=IAMAuthenticator(os.environ["WATSON_API_KEY"]),
     )
     service.set_service_url(os.environ["WATSON_SERVICE_URL"])
     return service

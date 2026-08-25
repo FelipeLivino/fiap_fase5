@@ -4,7 +4,6 @@ import os
 import time
 import uuid
 from datetime import datetime, timezone
-from pathlib import Path
 from urllib.parse import quote_plus
 
 import psycopg
@@ -23,17 +22,16 @@ def utc_now() -> datetime:
 
 
 def read_secret(env_name: str) -> str:
-    path = Path(os.environ[env_name])
-    value = path.read_text(encoding="utf-8").strip()
+    value = os.getenv(env_name, "").strip()
     if not value:
-        raise RuntimeError(f"Secret vazio: {env_name}")
+        raise RuntimeError(f"Variável de ambiente obrigatória ausente: {env_name}")
     return value
 
 
 class RpaWorker:
     def __init__(self) -> None:
-        postgres_password = read_secret("RPA_POSTGRES_PASSWORD_FILE")
-        mongo_password = read_secret("RPA_MONGO_PASSWORD_FILE")
+        postgres_password = read_secret("RPA_POSTGRES_PASSWORD")
+        mongo_password = read_secret("RPA_MONGO_PASSWORD")
         self._postgres_dsn = (
             f"host={os.getenv('POSTGRES_HOST', 'rpa-postgres')} "
             f"dbname={os.getenv('POSTGRES_DB', 'cardioia')} "

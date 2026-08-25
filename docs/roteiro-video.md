@@ -1,6 +1,6 @@
 # Roteiro do vídeo - máximo 3 minutos
 
-Tempo-alvo: 2min40s. Não mostrar `.env`, `.secrets`, `docker inspect` ou chaves.
+Tempo-alvo: 2min40s. Não mostrar `.env`, `docker inspect` ou chaves.
 
 | Tempo | Cena | Narração sugerida |
 |---:|---|---|

@@ -15,6 +15,7 @@ docker compose --profile genai-live run --rm genai-live
 ```
 
 O perfil live usa `gemini-3.5-flash-lite`. A chave deve existir localmente em
-`.secrets/gemini_api_key`; nunca deve entrar no repositório, na imagem ou no
-comando. O arquivo de entrada contém apenas dados fictícios. A chamada real foi
-validada em Docker em 24/08/2026.
+`GEMINI_API_KEY` no `.env`; nunca deve entrar no repositório, na imagem ou no
+comando. O Compose a injeta apenas no contêiner `genai-live`. O arquivo de
+entrada contém apenas dados fictícios. A chamada real foi validada em Docker em
+24/08/2026.
